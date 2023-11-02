@@ -1,8 +1,8 @@
 # Documentation for Programmable NanoPhotonics Processor
 
 This repository has codes with plenty of files. The files are used to program the instruments that monitors and control the PNP. There are also function that are used for a better data treatement by using the instruments functions.
-![Alt Text](4x4_pnp.png)
-![Alt Text](output.png)
+![Architecture of a 4x4 PNP](4x4_pnp.png)
+![Example output of the 4x4 PNP](output.png)
 # Devices
 The devices that are used for this experiments are the folowwing :
 ## Laser TSL570
