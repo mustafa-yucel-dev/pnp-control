@@ -11,12 +11,12 @@ import sys
 
 assembly_path = r".\DLL"                                                #dll path
 sys.path.append(assembly_path)
-ref = clr.AddReference(r"Santec_FTDI")
+ref = clr.AddReference(r"C:\\Users\\QPG\Downloads\\Marseille\\Marseille\\DLL\\Santec_FTDI")
 
 from Santec_FTDI import FTD2xx_helper
 
 
-TSL = FTD2xx_helper()
+TSL = FTD2xx_helper('22010054')
 raw = []
 
 TSL.Write('*CLS')

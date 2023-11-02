@@ -571,7 +571,6 @@ class ChannelVector(object):
 
 class QXOutput(Qontroller):
 
-
 	def __init__(self, *args, **kwargs):
 		super(QXOutput, self).__init__(*args, **kwargs)
 		# super(type(self), self).__init__(*args, **kwargs)
@@ -580,10 +579,10 @@ class QXOutput(Qontroller):
 		self.v_full = 0
 		self.v = None			# Channel voltages (direct access)
 		self.i = None			# Channel currents (direct access)
-		self.vmax = None		# Channel voltages (direct access)
+		self.vmax = 12			# Channel voltages (direct access)
 		self.imax = None		# Channel currents (direct access)
 		self.vmax_val = 12
-		self.imax_val  = 10.0
+		self.imax_val  = 20
 
 		# Get our full-scale voltage (VFULL)
 		try:
