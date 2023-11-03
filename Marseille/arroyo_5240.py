@@ -57,7 +57,15 @@ class Arroyo5240(object):
 
 if __name__ == '__main__':
     import time
-
+    input = False
+    # input = True
     obj = Arroyo5240()
+    temp = 20
     print(obj.get_temp())
-    obj.set_temp(20)
+    if input:
+        obj.set_temp(temp)
+        while obj.get_temp() != temp:
+            while obj.get_temp() !=temp :
+                time.sleep(1)
+                print(obj.get_temp())
+        print(obj.get_temp())

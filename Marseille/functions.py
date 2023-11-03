@@ -487,7 +487,7 @@ def sweep_current_collect_ports(phase_shifter_port,
             
     set_voltage = q.i[phase_shifter_port]
     
-    print(f"The Current is {set_voltage} V")
+    print(f"The Current is {set_voltage} mA")
     q.v[:] = 0  # Set all voltages back to 0
 
     print("Sweep complete.")
@@ -616,7 +616,7 @@ def plot_channels(P, values, phase_shifter_port):
     # Set X label for all subplots
     for ax_row in axes:
         for ax in ax_row:
-            ax.set_xlabel("I^2 [mA]")
+            ax.set_xlabel("$\ I^2 $ [$\ mA^2$]")
 
     fig.suptitle("Tuning of {}".format(phase_shifter_port), fontsize=16)
     for i in range(2):  # Iterate over rows
@@ -628,10 +628,10 @@ def plot_channels(P, values, phase_shifter_port):
                 for channel_index in pair:
                     P[channel_index] = np.array(P[channel_index])
                     # Check for negative values and adjust accordingly
-                    min_val = P[channel_index].min()
-                    if min_val < 0:
-                        P[channel_index] += abs(min_val)
-                        print("Added power to {} : {}".format(channel_index, abs(min_val)))
+                    #min_val = P[channel_index].min()
+                    #if min_val < 0:
+                    #    P[channel_index] += abs(min_val)
+                    #    print("Added power to {} : {}".format(channel_index, abs(min_val)))
                     ax.plot(values, P[channel_index] , color=colors[channel_index % len(colors)],
                             label=f"Channel {channel_index}")
                     ax.set_title(f"Output pair {pair_index + 1}")
