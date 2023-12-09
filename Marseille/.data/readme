@@ -1,0 +1,9 @@
+4x4_MZI_X
+    mzm
+        min_loop
+            0
+                Allows to find the parameters (current), to zerro correctly all the inputs. 
+                I perform a loop that minimize the total output until the total power is zero.
+            1
+                Same loop than before but the first four closer phase shifter are set to 6.5 mA
+                This is to see the configuration by having some average perturbation

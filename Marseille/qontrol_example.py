@@ -19,7 +19,7 @@ value_in = "Y"
 oi = [46]
 if (value_in.upper() == "Y"):
     for ch in oi:
-        q.i[ch] = 10
+        q.i[ch] = 0
 
         time.sleep(0.2)
         v = q.v[ch]

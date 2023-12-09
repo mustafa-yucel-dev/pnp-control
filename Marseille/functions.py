@@ -137,6 +137,61 @@ def maxmin(powers, sweeping_value):
 
     return x_max_values, x_min_values
 
+
+
+def maxmin_prominence(power, current_sweep, min_prominence, min_distance):
+    """
+    maxmin_prominence: This function identifies the maxima and minima (peaks and troughs) in a given power dataset relative to a current sweep, applies smoothing via a Savitzky-Golay filter, and plots the smoothed data with the identified maxima and minima. The function returns the current values and power levels at the identified maxima and minima.
+
+    Parameters:
+    - power: A one-dimensional NumPy array containing power readings corresponding to a current sweep.
+    - current_sweep: A one-dimensional NumPy array containing current sweep values. This array should have the same length as 'power' and contain the current values at which the power was measured.
+    - min_prominence: A float specifying the minimum prominence required for a peak to be identified. This helps in distinguishing significant peaks from noise.
+    - min_distance: A float specifying the minimum number of data points (distance) between consecutive peaks. This helps in preventing closely spaced fluctuations from being identified as multiple peaks.
+
+    Returns:
+    - x_max: A NumPy array of current values where the maxima (peaks) in power are located.
+    - max_power: A NumPy array of power readings at the identified maxima.
+    - x_min: A NumPy array of current values where the minima (troughs) in power are located.
+    - min_power: A NumPy array of power readings at the identified minima.
+
+    The function first smooths the power readings with a Savitzky-Golay filter using a window size of 11 and a polynomial order of 3. It then uses the scipy.signal.find_peaks function to identify the maxima and minima based on the specified prominence and distance. The results are plotted on a graph, where the current sweep values are on the x-axis and the smoothed power readings are on the y-axis. Maxima are marked in red, and minima in blue. The function concludes by displaying the plot and returning the current and power values at the maxima and minima.
+    """
+
+    # Apply a Savitzky-Golay filter to the power data to smooth it out
+    pnorm = scipy.signal.savgol_filter(power, 11, 3)  # Window size 51, polynomial order 3
+
+    # Find the maxima using the find_peaks function with minimum prominence and distance
+    peaks, _ = scipy.signal.find_peaks(pnorm, prominence=min_prominence, distance=min_distance)
+    
+    # Find the minima by inverting the pnorm and using the same function
+    troughs, _ = scipy.signal.find_peaks(-pnorm, prominence=min_prominence, distance=min_distance)
+
+    # Extract the y-values (power) of the peaks and troughs
+    max_power = pnorm[peaks]
+    min_power = pnorm[troughs]
+
+    # Extract the x-values (current) of the peaks and troughs
+    x_max = current_sweep[peaks]
+    x_min = current_sweep[troughs]
+
+    # Plot the smoothed power curve
+    plt.plot(current_sweep, pnorm, label='Smoothed Power')
+
+    # Plot the maxima and minima
+    plt.scatter(x_max, max_power, color='red', zorder=5, label='Maxima')
+    plt.scatter(x_min, min_power, color='blue', zorder=5, label='Minima')
+
+    # Show the plot with a legend
+    plt.legend()
+    plt.xlabel('Current (mA)')
+    plt.ylabel('Power')
+    plt.title('Maxima and Minima of the Power vs. Current Sweep')
+    plt.show()
+
+    return x_max, max_power, x_min, min_power
+
+
 def to_mean_power(V, I):
     """
     to_mean_power: Calculate the power (in watts) using the formula P = V * I.
@@ -408,6 +463,8 @@ def sweep_current_collect_ports(phase_shifter_port,
                                 n_sample,
                                 i_max=None, 
                                 step_iv=None,
+                                phase_shifter_set_list=None,
+                                phase_shifter_set_ports=None,
                                 phase_shifter_set=None,
                                 phase_shifter_set_folder=None):
     """
@@ -466,6 +523,15 @@ def sweep_current_collect_ports(phase_shifter_port,
                         print(f"to be set to : {current_i}")
                         print(f"Current set to {phase_shifter_i}: {q.i[phase_shifter_i]} ")
     
+
+    # Set the current depending the ports and currents
+    if phase_shifter_set_list is not None and phase_shifter_set_ports is not None:
+        for psp_i, psp in enumerate(phase_shifter_set_ports):
+            if phase_shifter_set_list[psp_i] is not None:
+                q.i[psp] = phase_shifter_set_list[psp_i]
+
+
+
     print(f"The sweep goes from {0} to {i_max} with {N_STEP} steps.")
     vvals = [float(x) for x in np.linspace(0, i_max, N_STEP)]
     for val in vvals:
@@ -483,13 +549,11 @@ def sweep_current_collect_ports(phase_shifter_port,
             V_PhS.append(q.v[phase_shifter_port])
             I_PhS.append(q.i[phase_shifter_port])
             
-            print(f"Time to write {time2 - time1} and the time to acquire{time4-time3}")
+            # print(f"Time to write {time2 - time1} and the time to acquire{time4-time3}")
             
-    set_voltage = q.i[phase_shifter_port]
     
-    print(f"The Current is {set_voltage} mA")
     q.v[:] = 0  # Set all voltages back to 0
-
+    print("All currents set to 0.")    
     print("Sweep complete.")
     
     q.close()
@@ -675,6 +739,7 @@ def get_data(folder, get_n_meas, get_device_meas, get_channel_list):
 
     # Verification
     n_meas = number_of_folder(folder)
+    print(n_meas,get_n_meas)
     if n_meas < get_n_meas: print("error : get_n_meas > n_meas")
     
     # Loop for data
