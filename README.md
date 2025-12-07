@@ -1,4 +1,4 @@
-# Documentation for Programmable NanoPhotonics Processor
+# Documentation for Programmable NanoPhotonics Processor for AI accelerator
 ![Entire setup](top_lvl_view.jpg)
 This repository has codes with plenty of files. The files are used to program the instruments that monitors and control the PNP. There are also function that are used for a better data treatement by using the instruments functions. 
 ![Architecture of a 4x4 PNP](4x4_pnp.png)
